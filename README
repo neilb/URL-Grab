@@ -1,5 +1,5 @@
-URL::Grab version 0.1
-======================
+URL::Grab
+=========
 
 URL::Grab is a perl module that drastically simplifies the fetching of files.
 It is designed to be used in programs that need common (but not necessarily

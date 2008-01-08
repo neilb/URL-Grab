@@ -1,12 +1,15 @@
-# http://module-build.sourceforge.net/META-spec.html
-#XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
-name:         URL-Grab
-version:      1.2
-version_from: lib/URL/Grab.pm
-installdirs:  site
-requires:
+--- #YAML:1.0
+name:                URL-Grab
+version:             1.3
+abstract:            Perl extension for blah blah blah
+license:             ~
+generated_by:        ExtUtils::MakeMaker version 6.32
+distribution_type:   module
+requires:     
     Carp:                          0
     LWP::UserAgent:                0
-
-distribution_type: module
-generated_by: ExtUtils::MakeMaker version 6.17
+meta-spec:
+    url:     http://module-build.sourceforge.net/META-spec-v1.2.html
+    version: 1.2
+author:
+    - Oliver Falk <oliver@linux-kernel.at>

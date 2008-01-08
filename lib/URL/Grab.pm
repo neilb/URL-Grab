@@ -6,6 +6,9 @@ use warnings;
 require Carp;
 require LWP::UserAgent;
 
+use Carp qw/carp/;
+use LWP::UserAgent;
+
 require Exporter;
 
 our @ISA = qw(Exporter);
@@ -15,7 +18,7 @@ our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
 our @EXPORT = qw();
 
-(our $VERSION) = '$Revision: 1.2 $' =~ /([\d.]+)/;
+(our $VERSION) = '$Revision: 1.3 $' =~ /([\d.]+)/;
 
 sub new {
 	my $class = shift;
