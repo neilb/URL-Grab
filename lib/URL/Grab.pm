@@ -18,7 +18,7 @@ our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
 our @EXPORT = qw();
 
-(our $VERSION) = '$Revision: 1.3 $' =~ /([\d.]+)/;
+(our $VERSION) = '$Revision: 1.4 $' =~ /([\d.]+)/;
 
 sub new {
 	my $class = shift;
@@ -38,7 +38,7 @@ sub grab_single {
 	my $url = shift;
 
 	my $retval;
-	if($url =~ /^http:\/\// || $url =~ /^ftp:\/\//) {
+	if($url =~ /^https?:\/\// || $url =~ /^ftp:\/\//) {
 		my $res = $self->{ua}->get($url);
 		my $retries = 0;
 		while($self->{retries} >= $retries) {
@@ -117,40 +117,55 @@ URL::Grab - Perl extension for blah blah blah
 =head1 SYNOPSIS
 
   use URL::Grab;
-  $content = $urlgrabber->grab('http://google.at');
-  $content = $urlgrabber->grab(qw(http://google.at));
-  $content = $urlgrabber->grab([ qw(http://google.at http://asdf.org) ]);
-  $content = $urlgrabber->grab([ qw(http://google.at http://asdf.org) ], 'http://perl.com');
+  my $cnt_hsh;
 
-  $content = $urlgrabber->grab_mirrorlist(
+  # IMPORTANT note (see also #32434):
+  # Please note, that URL::Grab doesn't return you the content itself as a
+  # scalar, but instead, returns a hash-reference. The keys of the
+  # hash are the URLs.
+
+  $cnt_hsh = $urlgrabber->grab('http://google.at');
+
+  # The content then is available in $cnt_hsh->{'http://google.at'}->{'http://google.at'}.
+  # Sorry, this is a design issue, that cannot be changed any more :-)
+  # If you are fetching only one URL, you would better use grab_single!
+
+  $cnt_hsh = $urlgrabber->grab(qw(http://google.at));
+  $cnt_hsh = $urlgrabber->grab([ qw(http://google.at http://asdf.org) ]);
+  $cnt_hsh = $urlgrabber->grab([ qw(http://google.at http://asdf.org) ], 'http://perl.com');
+
+  $cnt_hsh = $urlgrabber->grab_mirrorlist(
     'http://linux.duke.edu/projects/yum/',
     [qw(http://www.netfilter.org http://www.at.netfilter.org)]
   );
 
-  $content = $urlgrabber->grab_mirrorlist([qw(
+  # Please note, the following example will return only *one* hash-reference - it will use the
+  # first that works!!!
+  $cnt_hsh = $urlgrabber->grab_mirrorlist([qw(
      http://www.netfilter.org http://www.at.netfilter.org
   )]);
 
-  $content = $urlgrabber->grab_mirrorlist([qw(
+  $cnt_hsh = $urlgrabber->grab_mirrorlist([qw(
     ftp://linux-kernel.at/packages/yum.conf2
     http://filelister.linux-kernel.at/downloads/packages/yum.conf
   )]);
 
-  $content = $urlgrabber->grab_mirrorlist(
+  $cnt_hsh = $urlgrabber->grab_mirrorlist(
     'ftp://linux-kernel.at/packages/yum.conf'
   );
 
-  $content = $urlgrabber->grab_mirrorlist([qw(
+  $cnt_hsh = $urlgrabber->grab_mirrorlist([qw(
     /etc/yum.conf
     ftp://linux-kernel.at/packages/yum.conf
   )]);
 
 =head1 DESCRIPTION
 
-URL::Grab is a perl module that drastically simplifies the fetching of files.
-It is designed to be used in programs that need common (but not necessarily
-simple) url-fetching features. It is extremely simple to drop into an
-existing program and provides a clean interface to protocol-independant
+URL::Grab is a perl module that drastically simplifies the fetching of files
+from within a local source (eg. local filesystem) and/or remote sources
+(eg. http, ftp). It is designed to be used in programs that need common (but
+not necessarily simple) url-fetching features. It is extremely simple to drop
+into an existing program and provides a clean interface to protocol-independant
 file-access. Best of all, URL::Grab takes care of all those pesky
 file-fetching details, and lets you focus on whatever it is that your program
 is written to do!
@@ -173,9 +188,15 @@ Project website:
 
 Oliver Falk, E<lt>oliver@linux-kernel.atE<gt>
 
+=head1 THANKS
+
+Gary Krueger E<lt>gkrueger@browsermedia.comE<gt> for pointing out some issues
+ - #32434
+ - #32433
+
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2006 by Oliver Falk E<lt>oliver@linux-kernel.atE<gt>
+Copyright (C) 2006-2008 by Oliver Falk E<lt>oliver@linux-kernel.atE<gt>
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.8.0 or,
